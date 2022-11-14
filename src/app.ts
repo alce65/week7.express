@@ -4,7 +4,6 @@ import morgan from 'morgan';
 import { taskRouter } from './router/task.js';
 
 export const app = express();
-// let data: Array<Task> = importData.tasks;
 
 app.use(morgan('dev'));
 app.use(cors());

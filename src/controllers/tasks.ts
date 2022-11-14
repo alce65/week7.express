@@ -1,6 +1,11 @@
+import fs from 'fs';
 import { NextFunction, Request, Response } from 'express';
+import * as dotenv from 'dotenv'; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+dotenv.config();
 import { Task } from '../interfaces/task.js';
-import importData from '../mock/data.json' assert { type: 'json' };
+// import importData from '../mock/data.json' assert { type: 'json' };
+const dataFile = process.env.DATA_FILE || '';
+const importData = JSON.parse(fs.readFileSync(dataFile, 'utf-8'));
 
 // eslint-disable-next-line prefer-const
 let data: Array<Task> = importData.tasks;
