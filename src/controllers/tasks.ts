@@ -4,8 +4,8 @@ import * as dotenv from 'dotenv'; // see https://github.com/motdotla/dotenv#how-
 dotenv.config();
 import { Task } from '../interfaces/task.js';
 // import importData from '../mock/data.json' assert { type: 'json' };
-const dataFile = process.env.DATA_FILE || '';
-const importData = JSON.parse(fs.readFileSync(dataFile, 'utf-8'));
+const dataFileURL = process.env.DATA_FILE || '';
+const importData = JSON.parse(fs.readFileSync(dataFileURL, 'utf-8'));
 
 // eslint-disable-next-line prefer-const
 let data: Array<Task> = importData.tasks;
