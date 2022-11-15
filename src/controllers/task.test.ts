@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
+import { TaskFileData } from '../data/tasks.file.data';
 import { TaskController } from './tasks';
 
 describe('Given TaskController', () => {
-    const taskController = new TaskController();
+    const model = new TaskFileData();
+    const taskController = new TaskController(model);
     const req = {};
     const resp = {
         json: jest.fn(),
