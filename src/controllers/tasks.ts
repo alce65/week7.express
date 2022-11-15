@@ -1,47 +1,101 @@
 import { NextFunction, Request, Response } from 'express';
 import { Data } from '../data/data.js';
+import { HTTPError } from '../interfaces/error.js';
 import { Task } from '../interfaces/task.js';
 
 export class TaskController {
     constructor(public dataModel: Data<Task>) {}
-
-    async getAll(req: Request, resp: Response) {
-        const data = await this.dataModel.getAll();
-        resp.json(data).end();
+    async getAll(req: Request, resp: Response, next: NextFunction) {
+        try {
+            const data = await this.dataModel.getAll();
+            resp.json(data).end();
+        } catch (error) {
+            const httpError = new HTTPError(
+                503,
+                'Service unavailable',
+                (error as Error).message
+            );
+            next(httpError);
+            return;
+        }
     }
 
     get(req: Request, resp: Response) {
         //
     }
 
-    post(req: Request, resp: Response) {
-        // const newTask = {
-        //     ...req.body,
-        //     id: this.data.length + 1,
-        // };
-        // this.data.push(newTask);
-        // resp.json(newTask);
-        // resp.end();
+    async post(req: Request, resp: Response, next: NextFunction) {
+        if (!req.body.title) {
+            const httpError = new HTTPError(
+                406,
+                'Not Acceptable',
+                'Title not included in the data'
+            );
+            next(httpError);
+            return;
+        }
+        try {
+            const newTask = await this.dataModel.post(req.body);
+            resp.json(newTask).end();
+        } catch (error) {
+            const httpError = new HTTPError(
+                503,
+                'Service unavailable',
+                (error as Error).message
+            );
+            next(httpError);
+            return;
+        }
     }
 
-    patch(req: Request, resp: Response) {
-        // const updateTask = {
-        //     ...this.data.find((item) => item.id === +req.params.id),
-        //     ...req.body,
-        // };
-        // this.data[this.data.findIndex((item) => item.id === +req.params.id)] =
-        //     updateTask;
-        // resp.json(updateTask);
-        // resp.end();
+    async patch(req: Request, resp: Response, next: NextFunction) {
+        try {
+            const updateTask = await this.dataModel.patch(
+                +req.params.id,
+                req.body
+            );
+            resp.json(updateTask).end();
+        } catch (error) {
+            if ((error as Error).message === 'Not found id') {
+                const httpError = new HTTPError(
+                    404,
+                    'Not Found',
+                    (error as Error).message
+                );
+                next(httpError);
+                return;
+            }
+            const httpError = new HTTPError(
+                503,
+                'Service unavailable',
+                (error as Error).message
+            );
+            next(httpError);
+            return;
+        }
     }
 
-    delete(req: Request, resp: Response, next: NextFunction) {
-        // if (!this.data.find((item) => item.id === +req.params.id)) {
-        //     next(new Error('Not found'));
-        //     return;
-        // }
-        // this.data = this.data.filter((item) => item.id !== +req.params.id);
-        // resp.json({});
-        // resp.end();
+    async delete(req: Request, resp: Response, next: NextFunction) {
+        try {
+            await this.dataModel.delete(+req.params.id);
+            resp.json({}).end();
+        } catch (error) {
+            if ((error as Error).message === 'Not found id') {
+                const httpError = new HTTPError(
+                    404,
+                    'Not Found',
+                    (error as Error).message
+                );
+                next(httpError);
+                return;
+            }
+            const httpError = new HTTPError(
+                503,
+                'Service unavailable',
+                (error as Error).message
+            );
+            next(httpError);
+            return;
+        }
     }
 }

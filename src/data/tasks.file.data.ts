@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import * as dotenv from 'dotenv'; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 dotenv.config();
 import { Task } from '../interfaces/task.js';
-import { Data } from './data.js';
+import { Data, id } from './data.js';
 
 export class TaskFileData implements Data<Task> {
     dataFileURL: string;
@@ -16,7 +16,7 @@ export class TaskFileData implements Data<Task> {
             .then((data) => JSON.parse(data) as Array<Task>);
     }
 
-    async get(id: number): Promise<Task> {
+    async get(id: id): Promise<Task> {
         return fs.readFile(this.dataFileURL, 'utf-8').then((data) => {
             const aData = JSON.parse(data) as Array<Task>;
             const item = aData.find((item) => item.id === id);
@@ -31,6 +31,26 @@ export class TaskFileData implements Data<Task> {
         aData.push(finalTask);
         await this.#saveData(aData);
         return finalTask;
+    }
+
+    async patch(id: id, updateTask: Partial<Task>): Promise<Task> {
+        const aData = await this.getAll();
+        const index = aData.findIndex((item) => item.id === id);
+        if (!index) throw new Error('Not found id');
+        aData[index] = {
+            ...aData[index],
+            ...updateTask,
+        };
+        await this.#saveData(aData);
+        return aData[index];
+    }
+
+    async delete(id: id): Promise<void> {
+        const aData = await this.getAll();
+        const index = aData.findIndex((item) => item.id === id);
+        if (!index) throw new Error('Not found id');
+        aData.filter((item) => item.id !== id);
+        await this.#saveData(aData);
     }
 
     #createID() {
