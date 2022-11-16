@@ -8,7 +8,7 @@ export class TaskController {
     async getAll(req: Request, resp: Response, next: NextFunction) {
         try {
             const data = await this.dataModel.getAll();
-            resp.json(data).end();
+            resp.json(data);
         } catch (error) {
             const httpError = new HTTPError(
                 503,
