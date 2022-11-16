@@ -15,9 +15,8 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use((req, res, next) => {
-    // Optional: origin as string
-    // const origin = req.header('Origin');
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    const origin = req.header('Origin');
+    res.setHeader('Access-Control-Allow-Origin', origin as string);
     next();
 });
 
