@@ -18,9 +18,9 @@ export class TaskFileData implements Data<Task> {
 
     async get(id: id): Promise<Task> {
         return fs.readFile(this.dataFileURL, 'utf-8').then((data) => {
-            const aData = JSON.parse(data) as Array<Task>;
+            const aData = JSON.parse(data).tasks as Array<Task>;
             const item = aData.find((item) => item.id === id);
-            if (!item) throw new Error();
+            if (!item) throw new Error('Not found id');
             return item;
         });
     }
@@ -48,7 +48,7 @@ export class TaskFileData implements Data<Task> {
     async delete(id: id): Promise<void> {
         const aData = await this.getAll();
         const index = aData.findIndex((item) => item.id === id);
-        if (!index) throw new Error('Not found id');
+        if (index < 0) throw new Error('Not found id');
         const finalData = aData.filter((item) => item.id !== id);
         await this.#saveData(finalData);
     }
@@ -58,6 +58,7 @@ export class TaskFileData implements Data<Task> {
     }
 
     #saveData(data: Array<Task>) {
-        return fs.writeFile(this.dataFileURL, JSON.stringify(data));
+        const finalData = { tasks: data };
+        return fs.writeFile(this.dataFileURL, JSON.stringify(finalData));
     }
 }

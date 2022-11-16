@@ -20,8 +20,14 @@ export class TaskController {
         }
     }
 
-    get(req: Request, resp: Response) {
-        //
+    async get(req: Request, resp: Response, next: NextFunction) {
+        try {
+            const data = await this.dataModel.get(+req.params.id);
+            resp.json(data);
+        } catch (error) {
+            next(this.#createHttpError(error as Error));
+            return;
+        }
     }
 
     async post(req: Request, resp: Response, next: NextFunction) {
@@ -56,21 +62,7 @@ export class TaskController {
             );
             resp.json(updateTask).end();
         } catch (error) {
-            if ((error as Error).message === 'Not found id') {
-                const httpError = new HTTPError(
-                    404,
-                    'Not Found',
-                    (error as Error).message
-                );
-                next(httpError);
-                return;
-            }
-            const httpError = new HTTPError(
-                503,
-                'Service unavailable',
-                (error as Error).message
-            );
-            next(httpError);
+            next(this.#createHttpError(error as Error));
             return;
         }
     }
@@ -80,22 +72,25 @@ export class TaskController {
             await this.dataModel.delete(+req.params.id);
             resp.json({}).end();
         } catch (error) {
-            if ((error as Error).message === 'Not found id') {
-                const httpError = new HTTPError(
-                    404,
-                    'Not Found',
-                    (error as Error).message
-                );
-                next(httpError);
-                return;
-            }
-            const httpError = new HTTPError(
-                503,
-                'Service unavailable',
-                (error as Error).message
-            );
-            next(httpError);
+            next(this.#createHttpError(error as Error));
             return;
         }
+    }
+
+    #createHttpError(error: Error) {
+        if ((error as Error).message === 'Not found id') {
+            const httpError = new HTTPError(
+                404,
+                'Not Found',
+                (error as Error).message
+            );
+            return httpError;
+        }
+        const httpError = new HTTPError(
+            503,
+            'Service unavailable',
+            (error as Error).message
+        );
+        return httpError;
     }
 }
