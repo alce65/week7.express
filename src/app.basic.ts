@@ -7,13 +7,16 @@ import importData from './mock/data.json' assert { type: 'json' };
 export const app = express();
 app.disable('x-powered-by');
 let data: Array<Task> = importData.tasks;
-
+const corsOptions = {
+    origin: '*',
+};
 app.use(morgan('dev'));
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
-app.use((_req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
+app.use((req, res, next) => {
+    const origin = req.header('Origin');
+    res.setHeader('Access-Control-Allow-Origin', origin as string);
     next();
 });
 
