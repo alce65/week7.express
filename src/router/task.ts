@@ -7,6 +7,7 @@ export const taskRouter = Router();
 const controller = new TaskController(new TaskFileData());
 
 taskRouter.get('/', controller.getAll.bind(controller));
+// Alternativa: aprovechar el lexical scope de las arrow functions
 // taskRouter.get('/', (req, resp) => controller.getAll(req, resp));
 taskRouter.get('/:id', controller.get.bind(controller));
 taskRouter.post('/', controller.post.bind(controller));

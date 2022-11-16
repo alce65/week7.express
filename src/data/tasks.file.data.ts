@@ -13,7 +13,7 @@ export class TaskFileData implements Data<Task> {
     async getAll(): Promise<Array<Task>> {
         return fs
             .readFile(this.dataFileURL, 'utf-8')
-            .then((data) => JSON.parse(data) as Array<Task>);
+            .then((data) => JSON.parse(data).tasks as Array<Task>);
     }
 
     async get(id: id): Promise<Task> {
@@ -49,8 +49,8 @@ export class TaskFileData implements Data<Task> {
         const aData = await this.getAll();
         const index = aData.findIndex((item) => item.id === id);
         if (!index) throw new Error('Not found id');
-        aData.filter((item) => item.id !== id);
-        await this.#saveData(aData);
+        const finalData = aData.filter((item) => item.id !== id);
+        await this.#saveData(finalData);
     }
 
     #createID() {

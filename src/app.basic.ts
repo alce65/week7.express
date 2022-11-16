@@ -5,14 +5,15 @@ import { Task } from './interfaces/task';
 import importData from './mock/data.json' assert { type: 'json' };
 
 export const app = express();
+app.disable('x-powered-by');
 let data: Array<Task> = importData.tasks;
 
 app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
 
-app.use((_req, _resp, next) => {
-    console.log('Middleware');
+app.use((_req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
     next();
 });
 

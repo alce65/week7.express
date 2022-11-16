@@ -5,10 +5,16 @@ import { taskRouter } from './router/task.js';
 import { CustomError } from './interfaces/error.js';
 
 export const app = express();
+app.disable('x-powered-by');
 
 app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
+
+app.use((_req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    next();
+});
 
 app.get('/', (_req, res) => {
     res.send('API Express de tareas').end();
