@@ -17,6 +17,6 @@ describe('Given TaskController', () => {
             resp as unknown as Response,
             next as NextFunction
         );
-        expect(resp.json).not.toHaveBeenCalled();
+        expect(resp.json).toHaveBeenCalled();
     });
 });

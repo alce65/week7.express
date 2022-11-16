@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Data } from '../data/data.js';
-import { HTTPError } from '../interfaces/error';
+import { HTTPError } from '../interfaces/error.js';
 import { Task } from '../interfaces/task.js';
 
 export class TaskController {
