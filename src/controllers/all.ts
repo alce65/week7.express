@@ -1,14 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
 import { Data } from '../data/data.js';
 import { HTTPError } from '../interfaces/error.js';
-import { Task } from '../interfaces/task.js';
 
-export class TaskController {
-    constructor(public dataModel: Data<Task>) {}
+export abstract class Controller<T> {
+    data: T | Array<T>;
+    constructor(public dataModel: Data<T>) {
+        this.data = [];
+    }
     async getAll(req: Request, resp: Response, next: NextFunction) {
         try {
-            const tasks = await this.dataModel.getAll();
-            resp.json({ tasks });
+            this.data = await this.dataModel.getAll();
+            return true;
         } catch (error) {
             const httpError = new HTTPError(
                 503,
@@ -16,17 +18,17 @@ export class TaskController {
                 (error as Error).message
             );
             next(httpError);
-            return;
+            return false;
         }
     }
 
     async get(req: Request, resp: Response, next: NextFunction) {
         try {
-            const task = await this.dataModel.get(+req.params.id);
-            resp.json({ task });
+            this.data = await this.dataModel.get(req.params.id);
+            return true;
         } catch (error) {
             next(this.#createHttpError(error as Error));
-            return;
+            return false;
         }
     }
 
@@ -38,11 +40,11 @@ export class TaskController {
                 'Title not included in the data'
             );
             next(httpError);
-            return;
+            return true;
         }
         try {
-            const task = await this.dataModel.post(req.body);
-            resp.json({ task });
+            this.data = await this.dataModel.post(req.body);
+            return true;
         } catch (error) {
             const httpError = new HTTPError(
                 503,
@@ -50,23 +52,23 @@ export class TaskController {
                 (error as Error).message
             );
             next(httpError);
-            return;
+            return false;
         }
     }
 
     async patch(req: Request, resp: Response, next: NextFunction) {
         try {
-            const task = await this.dataModel.patch(+req.params.id, req.body);
-            resp.json({ task });
+            this.data = await this.dataModel.patch(req.params.id, req.body);
+            return true;
         } catch (error) {
             next(this.#createHttpError(error as Error));
-            return;
+            return false;
         }
     }
 
     async delete(req: Request, resp: Response, next: NextFunction) {
         try {
-            await this.dataModel.delete(+req.params.id);
+            await this.dataModel.delete(req.params.id);
             resp.json({});
         } catch (error) {
             next(this.#createHttpError(error as Error));

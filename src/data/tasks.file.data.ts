@@ -11,18 +11,17 @@ export class TaskFileData implements Data<Task> {
     }
 
     async getAll(): Promise<Array<Task>> {
-        return fs
-            .readFile(this.dataFileURL, 'utf-8')
-            .then((data) => JSON.parse(data).tasks as Array<Task>);
+        return this.#readData().then((data) => data.tasks as Array<Task>);
     }
 
     async get(id: id): Promise<Task> {
-        return fs.readFile(this.dataFileURL, 'utf-8').then((data) => {
-            const aData = JSON.parse(data).tasks as Array<Task>;
-            const item = aData.find((item) => item.id === id);
-            if (!item) throw new Error('Not found id');
-            return item;
-        });
+        return this.#readData()
+            .then((data) => data.tasks as Array<Task>)
+            .then((data) => {
+                const item = data.find((item) => item.id === id);
+                if (!item) throw new Error('Not found id');
+                return item;
+            });
     }
 
     async post(newTask: Partial<Task>): Promise<Task> {
@@ -57,8 +56,18 @@ export class TaskFileData implements Data<Task> {
         return Math.trunc(Math.random() * 1_000_000_000);
     }
 
-    #saveData(data: Array<Task>) {
-        const finalData = { tasks: data };
+    #readData() {
+        return fs
+            .readFile(this.dataFileURL, 'utf-8')
+            .then((data) => JSON.parse(data));
+    }
+
+    async #saveData(data: Array<Task>) {
+        const initialData = await this.#readData();
+        const finalData = {
+            ...initialData,
+            tasks: data,
+        };
         return fs.writeFile(this.dataFileURL, JSON.stringify(finalData));
     }
 }

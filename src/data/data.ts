@@ -1,4 +1,5 @@
-export type id = number;
+import { Types } from 'mongoose';
+export type id = number | string; //Types.ObjectId;
 
 export interface Data<T> {
     getAll: () => Promise<Array<T>>;

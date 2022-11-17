@@ -1,8 +1,9 @@
 import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import { taskRouter } from './router/task.js';
 import { CustomError } from './interfaces/error.js';
+import { taskRouter } from './router/task.js';
+import { notesRouter } from './router/notes.js';
 
 export const app = express();
 app.disable('x-powered-by');
@@ -24,7 +25,10 @@ app.get('/', (_req, res) => {
     res.send('API Express de tareas').end();
 });
 
+// Ejemplo con FS
 app.use('/tasks', taskRouter);
+// Ejemplo con MongoDB/Mongoose
+app.use('/notes', notesRouter);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use(
