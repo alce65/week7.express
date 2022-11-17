@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import { CustomError } from './interfaces/error.js';
 import { taskRouter } from './router/task.js';
 import { notesRouter } from './router/notes.js';
+import { coffeeRouter } from './router/coffees.js';
 
 export const app = express();
 app.disable('x-powered-by');
@@ -29,6 +30,7 @@ app.get('/', (_req, res) => {
 app.use('/tasks', taskRouter);
 // Ejemplo con MongoDB/Mongoose
 app.use('/notes', notesRouter);
+app.use('/coffee', coffeeRouter);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use(
