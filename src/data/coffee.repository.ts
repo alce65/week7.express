@@ -56,4 +56,8 @@ export class CoffeeRepository implements Data<Coffee> {
         mongoose.disconnect();
         console.log(mongoose.connection.readyState);
     }
+
+    getModel() {
+        return this.#Model;
+    }
 }

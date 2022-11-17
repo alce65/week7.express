@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
-import * as dotenv from 'dotenv'; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
-dotenv.config({ path: '../.env' });
+import { USER, CLUSTER, PASSWD } from './config.js';
 
 export function dbConnect() {
-    const DBName = 'Coders2022';
-    let uri = `mongodb+srv://${process.env.USER}:${process.env.PASSWD}`;
-    uri += `@${process.env.CLUSTER}/${DBName}?retryWrites=true&w=majority`;
+    const DBName =
+        process.env.NODE_ENV !== 'test' ? 'Coders2022' : 'CodersTesting';
+    let uri = `mongodb+srv://${USER}:${PASSWD}`;
+    uri += `@${CLUSTER}/${DBName}?retryWrites=true&w=majority`;
     return mongoose.connect(uri);
 }

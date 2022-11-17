@@ -1,13 +1,12 @@
 import fs from 'fs/promises';
-import * as dotenv from 'dotenv'; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
-dotenv.config();
+import { DATA_FILE } from '../config.js';
 import { Task } from '../interfaces/task.js';
 import { Data, id } from './data.js';
 
 export class TaskFileData implements Data<Task> {
     dataFileURL: string;
     constructor() {
-        this.dataFileURL = process.env.DATA_FILE || '';
+        this.dataFileURL = DATA_FILE || '';
     }
 
     async getAll(): Promise<Array<Task>> {
