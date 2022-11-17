@@ -7,7 +7,7 @@ export type ProtoNote = {
 };
 
 export type Note = {
-    id: Types.ObjectId;
+    id: string; // Types.ObjectId;
     title: string;
     author: string;
     isImportant: boolean;
