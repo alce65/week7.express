@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Data } from '../data/data.js';
 import { HTTPError } from '../interfaces/error.js';
-import { Note } from '../interfaces/note.js';
+import { Note } from '../entities/note.js';
 import { Controller } from './all.js';
 
 export class NotesController extends Controller<Note> {

@@ -1,5 +1,5 @@
 import mongoose, { Schema, model } from 'mongoose';
-import { Coffee, ProtoCoffee } from '../interfaces/coffee.js';
+import { Coffee, ProtoCoffee } from '../entities/coffee.js';
 import { Data, id } from './data.js';
 
 export class CoffeeRepository implements Data<Coffee> {

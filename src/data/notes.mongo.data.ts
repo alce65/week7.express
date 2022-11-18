@@ -1,5 +1,5 @@
 import mongoose, { Schema, model } from 'mongoose';
-import { Note, ProtoNote } from '../interfaces/note';
+import { Note, ProtoNote } from '../entities/note';
 import { Data, id } from './data';
 
 export class NotesMongoData implements Data<Note> {

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Data } from '../data/data.js';
-import { Coffee } from '../interfaces/coffee.js';
+import { Coffee } from '../entities/coffee.js';
 import { HTTPError } from '../interfaces/error.js';
 
 export class CoffeeController {

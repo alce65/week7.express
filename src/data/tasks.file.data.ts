@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import { DATA_FILE } from '../config.js';
-import { Task } from '../interfaces/task.js';
+import { Task } from '../entities/task.js';
 import { Data, id } from './data.js';
 
 export class TaskFileData implements Data<Task> {

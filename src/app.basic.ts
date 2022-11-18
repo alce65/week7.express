@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import { Task } from './interfaces/task';
+import { Task } from './entities/task';
 import importData from './mock/data.json' assert { type: 'json' };
 
 export const app = express();
