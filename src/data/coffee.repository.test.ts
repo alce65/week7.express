@@ -41,7 +41,24 @@ describe('Given ...', () => {
         expect(result.name).toEqual(newCoffee.name);
     });
 
-    afterAll(() => {
-        mongoose.disconnect();
+    test('Then delete ...', async () => {
+        const result = await repository.delete(testIds[0]);
+        expect(result).toEqual(testIds[0]);
+    });
+
+    test('Then delete ...', async () => {
+        expect(async () => {
+            await repository.delete(1);
+        }).rejects.toThrowError(mongoose.Error.CastError);
+    });
+
+    test('Then delete ...', async () => {
+        expect(async () => {
+            await repository.delete('537b422da27b69c98b1916e1');
+        }).rejects.toThrowError(Error);
+    });
+
+    afterAll(async () => {
+        await mongoose.disconnect();
     });
 });

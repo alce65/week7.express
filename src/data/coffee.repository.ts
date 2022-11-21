@@ -46,10 +46,10 @@ export class CoffeeRepository implements Data<Coffee> {
         return result as Coffee;
     }
 
-    async delete(id: id): Promise<void> {
+    async delete(id: id): Promise<id> {
         const result = await this.#Model.findByIdAndDelete(id);
         if (result === null) throw new Error('Not found id');
-        return;
+        return id;
     }
 
     #disconnect() {

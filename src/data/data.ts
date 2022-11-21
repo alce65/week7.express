@@ -6,5 +6,5 @@ export interface Data<T> {
     get: (id: id) => Promise<T>;
     post: (data: Partial<T>) => Promise<T>;
     patch: (id: id, data: Partial<T>) => Promise<T>;
-    delete: (id: id) => Promise<void>;
+    delete: (id: id) => Promise<id>;
 }
